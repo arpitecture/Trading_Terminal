@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import OrderForm from '../components/OrderForm'
 
 function StockDetail() {
   const { symbol } = useParams()
@@ -30,6 +31,7 @@ function StockDetail() {
       <h2>{stock.symbol}</h2>
       <p>{stock.name}</p>
       <p>Price: ₹{stock.price}</p>
+      <OrderForm symbol={stock.symbol} />
     </div>
   )
 }

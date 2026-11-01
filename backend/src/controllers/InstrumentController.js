@@ -7,13 +7,11 @@ const getInstrumentBySymbol=async (req,res)=>{
     const symbol=req.params.symbol
     const found=instruments.find(stock=>stock.symbol.toUpperCase() === symbol.toUpperCase())
     if(found){
-        res.status(200).json({
-            found
-        })
-    }else{
-        res.status(404).json({
-            error:"not found"
-        })
+        return res.json(found)
     }
+    return res.status(404).json({
+        error:"not found"
+    })
+    
 }
 module.exports={getAllInstruments,getInstrumentBySymbol}
