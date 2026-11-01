@@ -1,6 +1,9 @@
 const express = require('express');
 const cors=require('cors')
+
 const instrumentRoutes=require('./routes/InstrumentRoutes.js')
+const orderRoutes=require('./routes/orderRoutes.js')
+
 const app=express()
 
 app.use(cors({origin:'http://localhost:5173'}))
@@ -10,5 +13,6 @@ app.get('/api/health',(req,res)=>{
     res.status(201).json({status:'ok'})
 })
 app.use('/api/instruments', instrumentRoutes)
+app.use('/api/orders', orderRoutes)
 
 module.exports=app

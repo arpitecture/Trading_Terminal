@@ -1,7 +1,8 @@
 const express=require('express')
 const router=express.Router()
-const { getAllInstruments } = require('../controllers/InstrumentController.js')
+const { getAllInstruments,getInstrumentBySymbol } = require('../controllers/InstrumentController.js')
 
 router.get('/', getAllInstruments)
+router.get('/:symbol', getInstrumentBySymbol)
 
 module.exports = router
