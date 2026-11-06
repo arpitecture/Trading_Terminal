@@ -42,9 +42,39 @@ const applySell=(symbol,quantity,price)=>{
     }
 }
 const applyFill=(order, price)=>{
+    if(order.side==='BUY'){
+        applyBuy(order.symbol, order.quantity, price)
+    }else if(order.side==='SELL'){
+        applySell(order.symbol, order.quantity, price)
+    }
+}
+const getPortfoliowithPnL = (instruments) => {
+  const round = (n) => Math.round(n * 100) / 100
 
+  const holdings = Object.entries(portfolio.holdings).map(([symbol, h]) => {
+    const stock = instruments.find(i => i.symbol === symbol)
+    const currentPrice = stock ? stock.price : h.avgPrice
+
+    return {
+      symbol,
+      quantity: h.quantity,
+      avgPrice: h.avgPrice,
+      currentPrice,
+      marketValue: round(h.quantity * currentPrice),
+      unrealizedPnl: round((currentPrice - h.avgPrice) * h.quantity)
+    }
+  })
+
+  const totalMarketValue = round(holdings.reduce((sum, h) => sum + h.marketValue, 0))
+  const totalUnrealizedPnl = round(holdings.reduce((sum, h) => sum + h.unrealizedPnl, 0))
+
+  return {
+    cash: portfolio.cash,
+    realizedPnL: portfolio.realizedPnL,
+    holdings,
+    totalMarketValue,
+    totalUnrealizedPnl,
+    totalEquity: round(portfolio.cash + totalMarketValue)
+  }
 }
-const getPortfolioWithPnl=(instruments)=>{
-    
-}
-module.exports={getPortfolio,applyBuy,applySell};
+module.exports={getPortfolio,applyBuy,applySell,applyFill,getPortfoliowithPnL};

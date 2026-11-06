@@ -1,4 +1,5 @@
 const instruments = require('../data/instruments.json')
+const { applyFill } = require('../services/PortfolioService')
 
 const orders=[]
 let nextid=1;
@@ -23,19 +24,28 @@ const placeOrder =(req,res)=>{
     if(!Number.isInteger(quantity) || quantity<=0){
         return res.status(400).json({error:'Quantity must be a positive integer'})
     }
-    const order={
-        id:nextid++,
-        symbol: symbol.toUpperCase(),
+    const order = {
+        id: nextid++,
+        userId: 1,
+        symbol: stock.symbol,
         side,
         quantity,
-        status:"placed",
+        status: 'PENDING',
         createdAt: new Date().toISOString()
     }
-    orders.push(order);
-    res.status(201).json({
-        message:"order created successfully",
-        order
-    })
+
+    try {
+        applyFill(order, stock.price)
+        order.status = 'FILLED'
+        order.fillPrice = stock.price
+        orders.push(order)
+        return res.status(201).json({ message: 'order filled', order })
+    } catch (err) {
+        order.status = 'REJECTED'
+        order.reason = err.message
+        orders.push(order)
+        return res.status(400).json({ error: err.message, order })
+    }
 }
 const getOrders=(req,res)=>{
     res.status(201).json({

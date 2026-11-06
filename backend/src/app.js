@@ -3,6 +3,7 @@ const cors=require('cors')
 
 const instrumentRoutes=require('./routes/InstrumentRoutes.js')
 const orderRoutes=require('./routes/orderRoutes.js')
+const portfolioRoutes = require('./routes/PortfolioRoutes.js')
 
 const app=express()
 
@@ -14,5 +15,6 @@ app.get('/api/health',(req,res)=>{
 })
 app.use('/api/instruments', instrumentRoutes)
 app.use('/api/orders', orderRoutes)
+app.use('/api/portfolio',portfolioRoutes)
 
 module.exports=app
